@@ -7,4 +7,4 @@ const functionName = 'serverless-http'
 const app = srv(functionName)
 
 // Export lambda handler
-exports.handler = serverless(app)
+module.exports.handler = serverless(app)

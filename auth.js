@@ -6,9 +6,9 @@ const app = express();
 
 function srv(functionName){
 
-    const port = 80;
-    const routerBasePath = process.env.NODE_ENV === 'dev' ? `/${functionName}` : `/.netlify/functions/${functionName}/`
-
+    const port = 2350;
+    // const routerBasePath = process.env.NODE_ENV === 'dev' ? `/${functionName}` : `/.netlify/functions/${functionName}/`
+    const routerBasePath = `/.netlify/functions/auth`
     app.use('/auth', authRoutes);
 
     app.get('/', (req, res) => {
