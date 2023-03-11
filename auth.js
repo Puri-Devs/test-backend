@@ -6,7 +6,7 @@ const app = express();
 
 function srv(functionName){
 
-    const port = 2350;
+    const port = 80;
     const routerBasePath = process.env.NODE_ENV === 'dev' ? `/${functionName}` : `/.netlify/functions/${functionName}/`
 
     app.use('/auth', authRoutes);
@@ -15,9 +15,9 @@ function srv(functionName){
         res.sendFile(__dirname + '/api/example/get-token.html');
     });
 
-    app.listen(port, () => {
-        console.log(`Firebase Server API on port: ${port}`)
-    })
+//     app.listen(port, () => {
+//         console.log(`Firebase Server API on port: ${port}`)
+//     })
 
     // Setup routes
     app.use(routerBasePath, authRoutes)
