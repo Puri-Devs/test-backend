@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js",
+    "test": "node srv_auth.js",
     "auth1": "node auth.js"
   },
   "author": "NPWS",
