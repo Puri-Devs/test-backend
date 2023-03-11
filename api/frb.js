@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const firebase_adm = require('firebase-admin')
+const compression = require('compression')
 const bodyParser = require('body-parser');
 
 const serviceAccount = require('./config.json');
@@ -15,6 +16,8 @@ const adm = firebase_adm.auth()
 function verify(idToken) {
   return adm.verifyIdToken(idToken);
 }
+
+router.use(compression())
 
 router.use(bodyParser.urlencoded({ extended: false })); // for Support POST body
 
