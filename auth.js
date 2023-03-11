@@ -2,7 +2,7 @@ const authRoutes = require('./api/frb');
 
 const express = require('express')
 const app = express();
-const port = 2350;
+const port = 80;
 
 
 app.use('/auth', authRoutes);
