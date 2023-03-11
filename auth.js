@@ -15,9 +15,9 @@ function srv(functionName){
         res.sendFile(__dirname + '/api/example/get-token.html');
     });
 
-//     app.listen(port, () => {
-//         console.log(`Firebase Server API on port: ${port}`)
-//     })
+    app.listen(port, () => {
+        console.log(`Firebase Server API on port: ${port}`)
+    })
 
     // Setup routes
     app.use(routerBasePath, authRoutes)
