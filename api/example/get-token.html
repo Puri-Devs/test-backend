@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Example authentication with token</title>
+
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase/init.js"></script>
+
+    <script type="text/javascript">
+      function post(url, args) {
+        const xhr = new XMLHttpRequest();
+
+        // Set the request method and URL
+        xhr.open("POST", url);
+
+        // Set the request headers
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+
+        // Define the data to be sent in the request body
+        let urlEncodedDataPairs = [];
+        for (let key in args) {
+          urlEncodedDataPairs.push(
+            encodeURIComponent(key) + "=" + encodeURIComponent(args[key])
+          );
+        }
+        const data = urlEncodedDataPairs.join("&");
+        // const data = 'param1=value1&param2=value2';
+
+        // Set up a callback for when the request is complete
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            // Request successful
+            res = xhr.responseText;
+            console.log(res);
+            document.getElementById("output").textContent = res;
+          } else {
+            // Request failed
+            stat = xhr.statusText;
+            console.log(stat);
+          }
+        };
+
+        // Send the request
+        xhr.send(data);
+      }
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDiNJNKAGfGgay_wuiw3URoxVQiqGQkLto",
+        authDomain: "login-with-googg.firebaseapp.com",
+        projectId: "login-with-googg",
+        storageBucket: "login-with-googg.appspot.com",
+        messagingSenderId: "749979553097",
+        appId: "1:749979553097:web:6b0d8a035f18f35cf09e98",
+        measurementId: "G-MFXSKB0N7M",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      function toggleSignIn(prov = "google") {
+        if (!firebase.auth().currentUser) {
+          if (true) {
+            if (prov == "google") {
+              var provider = new firebase.auth.GoogleAuthProvider();
+              // provider.addScope(
+              //   "https://www.googleapis.com/auth/contacts.readonly"
+              // );
+            } else if (prov == "github") {
+              var provider = new firebase.auth.GithubAuthProvider();
+              // provider.addScope('repo');
+            } else if (prov == "microsoft") {
+              var provider = new firebase.auth.OAuthProvider("microsoft.com");
+              provider.addScope("User.Read");
+            } else {
+              console.error("Invalid provider:", prov);
+              return 0;
+            }
+          }
+          firebase
+            .auth()
+            .signInWithPopup(provider)
+            .then(function (result) {
+              // This gives you a Google Access Token. You can use it to access the Google API.
+              //   var token = result.credential.accessToken;
+              // The signed-in user info.
+              var user = result.user;
+            })
+            .catch(function (error) {
+              // Handle Errors here.
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              // The email of the user's account used.
+              var email = error.email;
+              // The firebase.auth.AuthCredential type that was used.
+              var credential = error.credential;
+              if (
+                errorCode === "auth/account-exists-with-different-credential"
+              ) {
+                alert(
+                  "You have already signed up with a different auth provider for that email."
+                );
+                // If you are using multiple auth providers on your app you should handle linking
+                // the user's accounts here.
+              } else {
+                console.error(error);
+              }
+            });
+        } else {
+          firebase.auth().signOut();
+        }
+        firebase.auth().onAuthStateChanged(function (user) {
+          if (user) {
+            var token = JSON.parse(JSON.stringify(user, null, "  "))[
+              "stsTokenManager"
+            ].accessToken;
+            let dataPost = { idToken: token };
+            post("http://127.0.0.1:2350/auth/ext-users", dataPost);
+            // console.log(result)
+            // console.log(token)
+            // document.getElementById("usr-token").textContent = token;
+          }
+        });
+      }
+
+      // function enableButtons() {
+      //   document
+      //     .getElementById("sign-in-google")
+      //     .addEventListener("click", toggleSignIn(), false);
+      //   document
+      //     .getElementById("sign-in-github")
+      //     .addEventListener("click", toggleSignIn("github"), false);
+      //   document
+      //     .getElementById("sign-in-microsoft")
+      //     .addEventListener("click", toggleSignIn("microsoft"), false);
+      // }
+
+      // window.onload = function () {
+      //   enableButtons();
+      // };
+    </script>
+  </head>
+  <body>
+    <button id="sign-in-google" onclick="toggleSignIn()">Sign In with Google</button>
+    <button id="sign-in-github" onclick="toggleSignIn('github')">Sign In with Github</button>
+    <button id="sign-in-microsoft" onclick="toggleSignIn('microsoft')">Sign In with Microsoft</button>
+    <span id="output"></span>
+  </body>
+</html>
